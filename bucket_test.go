@@ -444,18 +444,6 @@ func TestRangeItems(t *testing.T) {
 		t.Error(err.Error())
 	}
 
-	// Verify range.
-	rmin, rmax, err := years.Range()
-	if err != nil {
-		t.Error(err.Error())
-	}
-	if !bytes.Equal([]byte("1970"), rmin) {
-		t.Errorf("%v != 1970", string(rmin))
-	}
-	if !bytes.Equal([]byte("2010"), rmax) {
-		t.Errorf("%v != 2010", string(rmax))
-	}
-
 	// Now get each item whose key is in the 1990 to 2000 range.
 	min := []byte("1990")
 	max := []byte("2000")

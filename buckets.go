@@ -171,19 +171,36 @@ func (bk *Bucket) PrefixItems(pre []byte) (items []Item, err error) {
 	return items, err
 }
 
-// Range returns the first and last key in the bucket.
-func (bk *Bucket) Range() (min []byte, max []byte, err error) {
+// First returns the first item in the bucket.
+func (bk *Bucket) First() (item Item, err error) {
 	err = bk.db.View(func(tx *bolt.Tx) error {
 		c := tx.Bucket(bk.Name).Cursor()
-		f, _ := c.First()
-		l, _ := c.Last()
-		min = make([]byte, len(f))
-		copy(min, f)
-		max = make([]byte, len(l))
-		copy(max, l)
+		var key, value []byte
+		k, v := c.First()
+		key = make([]byte, len(k))
+		copy(key, k)
+		value = make([]byte, len(v))
+		copy(value, v)
+		item = Item{key, value}
 		return nil
 	})
-	return min, max, err
+	return item, err
+}
+
+// Last returns the last item in the bucket.
+func (bk *Bucket) Last() (item Item, err error) {
+	err = bk.db.View(func(tx *bolt.Tx) error {
+		c := tx.Bucket(bk.Name).Cursor()
+		var key, value []byte
+		k, v := c.Last()
+		key = make([]byte, len(k))
+		copy(key, k)
+		value = make([]byte, len(v))
+		copy(value, v)
+		item = Item{key, value}
+		return nil
+	})
+	return item, err
 }
 
 // RangeItems returns a slice of key/value pairs for all keys within
