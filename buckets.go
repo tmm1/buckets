@@ -171,6 +171,21 @@ func (bk *Bucket) PrefixItems(pre []byte) (items []Item, err error) {
 	return items, err
 }
 
+// Range returns the first and last key in the bucket.
+func (bk *Bucket) Range() (min []byte, max []byte, err error) {
+	err = bk.db.View(func(tx *bolt.Tx) error {
+		c := tx.Bucket(bk.Name).Cursor()
+		f, _ := c.First()
+		l, _ := c.Last()
+		min = make([]byte, len(f))
+		copy(min, f)
+		max = make([]byte, len(l))
+		copy(max, l)
+		return nil
+	})
+	return min, max, err
+}
+
 // RangeItems returns a slice of key/value pairs for all keys within
 // a given range.  Each k/v pair in the slice is of type Item
 // (`struct{ Key, Value []byte }`).
