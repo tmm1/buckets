@@ -171,6 +171,15 @@ func (bk *Bucket) PrefixItems(pre []byte) (items []Item, err error) {
 	return items, err
 }
 
+// NextSequence returns an autoincrementing integer for the bucket.
+func (bk *Bucket) NextSequence() (seq uint64, err error) {
+	bk.db.Update(func(tx *bolt.Tx) error {
+		seq, err = tx.Bucket(bk.Name).NextSequence()
+		return err
+	})
+	return seq, err
+}
+
 // First returns the first item in the bucket.
 func (bk *Bucket) First() (item Item, err error) {
 	err = bk.db.View(func(tx *bolt.Tx) error {
