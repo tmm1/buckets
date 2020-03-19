@@ -1,7 +1,7 @@
 package buckets
 
 import (
-  bolt "github.com/etcd-io/bbolt"
+  bolt "go.etcd.io/bbolt"
 )
 
 // A RangeScanner scans a bucket for keys within a given range.
